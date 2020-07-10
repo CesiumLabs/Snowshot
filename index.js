@@ -1,2 +1,2 @@
-const Aero = require("./src/Aero");
-module.exports = Aero;
+const snowshot = require("./src/Snow");
+module.exports = snowshot;

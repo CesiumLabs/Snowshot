@@ -1,5 +1,5 @@
 {
-  "name": "aerojs",
+  "name": "snowshot",
   "version": "1.0.0",
   "description": "Simple package to take screenshot of given html or markdown code.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Snowflake107/aerojs.git"
+    "url": "git+https://github.com/Snowflake107/snowshot.git"
   },
   "keywords": [
     "canvas",
@@ -21,9 +21,9 @@
   "author": "Snowflake107",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Snowflake107/aerojs/issues"
+    "url": "https://github.com/Snowflake107/snowshot/issues"
   },
-  "homepage": "https://github.com/Snowflake107/aerojs#readme",
+  "homepage": "https://github.com/Snowflake107/snowshot#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "puppeteer": "^5.0.0",
