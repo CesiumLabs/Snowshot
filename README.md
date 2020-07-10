@@ -9,6 +9,7 @@ Snowshot is a simple package that allows you to take screenshot of given HTML co
 
 ## Preview
 ![img](https://i.imgur.com/eeaJ7T9.png)
+![img](https://raw.githubusercontent.com/Snowflake107/Snowshot/master/test/webshot.png)
 
 # Installing
 
@@ -161,7 +162,7 @@ const Snowshot = require("snowshot");
 const window = new Snowshot();
 
 window.load("<h1>Hello World</h1>");
-window.capture().then(data => fs.writeFileSync(data));
+window.capture().then(data => fs.writeFileSync("./page.png", data));
 ```
 
 ## Snowshot.capture(url, options)
@@ -174,7 +175,7 @@ Example:
 const Snowshot = require("snowshot");
 const window = new Snowshot();
 
-window.captureWebsite("https://google.com").then(data => fs.writeFileSync(data));
+window.captureWebsite("https://google.com").then(data => fs.writeFileSync("./google.png", data));
 ```
 
 ## Snowshot.version
