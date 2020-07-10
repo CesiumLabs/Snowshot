@@ -1,0 +1,32 @@
+{
+  "name": "aerojs",
+  "version": "1.0.0",
+  "description": "Simple package to take screenshot of given html or markdown code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snowflake107/aerojs.git"
+  },
+  "keywords": [
+    "canvas",
+    "html",
+    "html-to-canvas",
+    "screenshot",
+    "html-screenshot",
+    "markdown-screenshot"
+  ],
+  "author": "Snowflake107",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Snowflake107/aerojs/issues"
+  },
+  "homepage": "https://github.com/Snowflake107/aerojs#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "puppeteer": "^5.0.0",
+    "showdown": "^1.9.1"
+  }
+}
