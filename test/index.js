@@ -194,6 +194,12 @@ const window = new Snowshot();
 // load html
 window.load(code, true);
 
+// capture website
+window.captureWebsite("https://discord.com").then((image) => {
+    // save the image
+    fs.writeFileSync("./webshot.png", image);
+});
+
 // create screenshot
 window.capture().then((image) => {
     // save the image

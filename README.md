@@ -164,6 +164,19 @@ window.load("<h1>Hello World</h1>");
 window.capture().then(data => fs.writeFileSync(data));
 ```
 
+## Snowshot.capture(url, options)
+This method allows you to take screenshot of any website.
+**url** website url.
+**options** are the options for **[Puppeteer.PageScreenshotOptions](https://github.com/puppeteer/puppeteer/blob/v5.0.0/docs/api.md#pagescreenshotoptions)**.
+Example:
+
+```js
+const Snowshot = require("snowshot");
+const window = new Snowshot();
+
+window.captureWebsite("https://google.com").then(data => fs.writeFileSync(data));
+```
+
 ## Snowshot.version
 Current version of **Snowshot**. You may not use this after instantiating **Snowshot** class.
 Example:

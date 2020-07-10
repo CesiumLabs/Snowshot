@@ -80,12 +80,30 @@ class Snowshot {
      * @param {Object} options options for puppeteer.screenshot()
      * @returns {Promise<Buffer>}
      */
-    async capture(...options) {
+    async capture(options) {
         if (!this.rawHTML) throw new Error("No html content found, Please load HTML before using capture method!");
+        if (options && typeof options === "object" && options["path"]) delete options["path"];
         const browser = await Puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(this.rawHTML);
-        const buffer = await page.screenshot(...options);
+        const buffer = await page.screenshot(options);
+        await browser.close();
+        return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
+    }
+
+    /**
+     * Captures website via url
+     * @param {String} url Website url
+     * @param {Object} options Capture options
+     * @returns {Promise<Buffer>}
+     */
+    async captureWebsite(url, options) {
+        if (!url) throw new Error("No url was provided!");
+        if (options && typeof options === "object" && options["path"]) delete options["path"];
+        const browser = await Puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(url);
+        const buffer = await page.screenshot(options);
         await browser.close();
         return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
     }
