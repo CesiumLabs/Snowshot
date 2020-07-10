@@ -21,13 +21,16 @@ class Snowshot {
      * @param {Object} options Snowshot options
      * @param {Array} [options.removeTags] Tags to be removed before rendering
      * @param {Array} [options.removeAttributes] Attributes to be removed before rendering
+     * @param {Array} [options.args] Puppeteer args
      */
-    constructor(options = { removeTags: [], removeAttributes: [] }) {
+    constructor(options = { removeTags: [], removeAttributes: [], args: [] }) {
         if (!options.removeTags) options.removeTags = [];
         if (!options.removeAttributes) options.removeAttributes = [];
+        if (!options.args) options.args = [];
         if (!Array.isArray(options.removeTags)) throw new Error(`Expected "options.removeTags" type to be Array, received ${typeof options.removeTags}!`);
         if (!Array.isArray(options.removeAttributes)) throw new Error(`Expected "options.removeAttributes" type to be Array, received ${typeof options.removeAttributes}!`);
-        
+        if (!Array.isArray(options.args)) throw new Error(`Expected "options.args" type to be Array, received ${typeof options.args}!`);
+
         /**
          * Snowshot options
          * @type {Object}
@@ -83,7 +86,9 @@ class Snowshot {
     async capture(options) {
         if (!this.rawHTML) throw new Error("No html content found, Please load HTML before using capture method!");
         if (options && typeof options === "object" && options["path"]) delete options["path"];
-        const browser = await Puppeteer.launch();
+        const browser = await Puppeteer.launch({
+            args: this.options.args
+        });
         const page = await browser.newPage();
         await page.setContent(this.rawHTML);
         const buffer = await page.screenshot(options);
@@ -100,7 +105,9 @@ class Snowshot {
     async captureWebsite(url, options) {
         if (!url) throw new Error("No url was provided!");
         if (options && typeof options === "object" && options["path"]) delete options["path"];
-        const browser = await Puppeteer.launch();
+        const browser = await Puppeteer.launch({
+            args: this.options.args
+        });
         const page = await browser.newPage();
         await page.goto(url);
         const buffer = await page.screenshot(options);

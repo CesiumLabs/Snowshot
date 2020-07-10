@@ -127,6 +127,15 @@ new Snowshot({
 });
 ```
 
+**`options.args`**: You can supply args for `puppeteer.launch()` here. Value for this option must be **Array**.
+Example:
+
+```js
+new Snowshot({
+    args: ["--no-sandbox"]
+});
+```
+
 ## Snowshot.load(code, markdown=false)
 This method allows you to load your HTML or Markdown code. Code type must be a **String**.
 First parameter takes your code and second parameter takes a **Boolean** value. If second parameter is set to `true`, it will render markdown too.
