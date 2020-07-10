@@ -7,6 +7,10 @@ Aerojs is a simple package that allows you to take screenshot of given HTML code
 - Allows you to remove tags, attributes
 - Supports markdown
 
+
+## Preview
+![img](https://raw.githubusercontent.com/Snowflake107/Aerojs/master/test/image.png)
+
 # Installing
 
 ```sh
