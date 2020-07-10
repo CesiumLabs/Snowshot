@@ -22,14 +22,20 @@ class Snowshot {
      * @param {Array} [options.removeTags] Tags to be removed before rendering
      * @param {Array} [options.removeAttributes] Attributes to be removed before rendering
      * @param {Array} [options.args] Puppeteer args
+     * @param {Number} [options.height] Window Height
+     * @param {Number} [options.width] Window width
      */
-    constructor(options = { removeTags: [], removeAttributes: [], args: [] }) {
+    constructor(options = { removeTags: [], removeAttributes: [], args: [], height: 800, width: 1280 }) {
         if (!options.removeTags) options.removeTags = [];
         if (!options.removeAttributes) options.removeAttributes = [];
         if (!options.args) options.args = [];
+        if (!options.height) options.height = 800;
+        if (!options.width) options.width = 1280;
         if (!Array.isArray(options.removeTags)) throw new Error(`Expected "options.removeTags" type to be Array, received ${typeof options.removeTags}!`);
         if (!Array.isArray(options.removeAttributes)) throw new Error(`Expected "options.removeAttributes" type to be Array, received ${typeof options.removeAttributes}!`);
         if (!Array.isArray(options.args)) throw new Error(`Expected "options.args" type to be Array, received ${typeof options.args}!`);
+        if (isNaN(options.height)) throw new Error(`Expected "options.height" to be a number, received ${typeof options.height}`);
+        if (isNaN(options.width)) throw new Error(`Expected "options.height" to be a number, received ${typeof options.width}`);
 
         /**
          * Snowshot options
@@ -79,6 +85,27 @@ class Snowshot {
     }
 
     /**
+     * Returns loaded HTML
+     * @type {String}
+     */
+    html() {
+        return this.getHTML();
+    }
+
+    /**
+     * Set custom user agent
+     * @param {String} userAgent User agent
+     */
+    setUserAgent(userAgent) {
+        if (!userAgent || typeof userAgent !== "string") throw new Error("User agent must be a string.");
+        /**
+         * User agent
+         */
+        this.userAgent = userAgent;
+        return;
+    }
+
+    /**
      * Creates screenshot of loaded html
      * @param {Object} options options for puppeteer.screenshot()
      * @returns {Promise<Buffer>}
@@ -90,6 +117,11 @@ class Snowshot {
             args: this.options.args
         });
         const page = await browser.newPage();
+        if (this.userAgent) await page.setUserAgent(this.userAgent);
+        await page.setViewport({
+            width: this.options.width,
+            height: this.options.height
+        });
         await page.setContent(this.rawHTML);
         const buffer = await page.screenshot(options);
         await browser.close();
@@ -109,6 +141,11 @@ class Snowshot {
             args: this.options.args
         });
         const page = await browser.newPage();
+        if (this.userAgent) await page.setUserAgent(this.userAgent);
+        await page.setViewport({
+            width: this.options.width,
+            height: this.options.height
+        });
         await page.goto(url);
         const buffer = await page.screenshot(options);
         await browser.close();

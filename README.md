@@ -136,6 +136,27 @@ new Snowshot({
 });
 ```
 
+**`options.height`**: You can set window height here. Value for this option must be **Number**.
+Example:
+
+```js
+new Snowshot({
+    height: 800
+});
+```
+
+**`options.width`**: You can set window width here. Value for this option must be **Number**.
+Example:
+
+```js
+new Snowshot({
+    height: 1280
+});
+```
+
+## Snowshot.setUserAgent(userAgent)
+This method allows you to set custom user agent.
+
 ## Snowshot.load(code, markdown=false)
 This method allows you to load your HTML or Markdown code. Code type must be a **String**.
 First parameter takes your code and second parameter takes a **Boolean** value. If second parameter is set to `true`, it will render markdown too.

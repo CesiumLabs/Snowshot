@@ -3,193 +3,62 @@ const Snowshot = require("../index");
 const fs = require("fs");
 
 // basic html code
-let code = `<style>
+let code = `
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+Alternatively, for H1 and H2, an underline-ish style:
+
+Alt-H1
+======
+
+Alt-H2
+------
+
+Emphasis, aka italics, with *asterisks* or _underscores_.
+
+Strong emphasis, aka bold, with **asterisks** or __underscores__.
+
+Combined emphasis with **asterisks and _underscores_**.
+
+Strikethrough uses two tildes. ~~Scratch this.~~
+
+1. First ordered list item
+2. Another item
+⋅⋅* Unordered sub-list. 
+1. Actual numbers don't matter, just that it's a number
+⋅⋅1. Ordered sub-list
+4. And another item.
+
+⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).
+
+⋅⋅⋅To have a line break without a paragraph, you will need to use two trailing spaces.⋅⋅
+⋅⋅⋅Note that this line is separate, but within the same paragraph.⋅⋅
+⋅⋅⋅(This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)
+
+* Unordered list can use asterisks
+- Or minuses
++ Or pluses
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
 body {
-    background-color: black;
     color: white;
+    background-color: black;
+    font-family: 'Play', sans-serif;
 }
 </style>
-# Snowshot
-Snowshot is a simple package that allows you to take screenshot of given HTML code.
-
-# Features
-- Simple
-- Fast
-- Allows you to remove tags, attributes
-- Supports markdown
-
-# Installing
-
-\`\`\`sh
-npm i --save Snowshot
-\`\`\`
-
-# Getting started
-- Load Snowshot
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-\`\`\`
-
-- Load HTML
-
-\`\`\`js
-window.load("<h1>Hello World</h1>");
-\`\`\`
-
-- Take screenshot
-  
-\`\`\`js
-await window.capture();
-\`\`\`
-
-- Save as image
-  
-\`\`\`js
-let data = await window.capture();
-fs.writeFileSync("./myimage.png", data);
-\`\`\`
-
-## Basic Example
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-const fs = require("fs");
-
-window.load("<h1>Hello World</h1>");
-window.capture().then(data => {
-    fs.writeFileSync("./image.png", data);
-});
-\`\`\`
-
-## Using Markdown
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-const fs = require("fs");
-
-window.load("# Hello World", true);
-window.capture().then(data => {
-    fs.writeFileSync("./image.png", data);
-});
-\`\`\`
-
-## Using both html & markdown
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-const fs = require("fs");
-
-window.load("# Hello World<br><br><h2>Goodbye world</h2>", true);
-window.capture().then(data => {
-    fs.writeFileSync("./image.png", data);
-});
-\`\`\`
-
-## Removing script tag from the loaded code
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot({
-    removeTags: ["script"]
-});
-const fs = require("fs");
-
-window.load("<script>location.href = 'https://youtube.com'</script>");
-window.capture().then(data => {
-    fs.writeFileSync("./image.png", data);
-});
-\`\`\`
-
-# API
-
-## window({ options })
-Creating a new instance of **window** allows you to load & capture screenshot.
-You can create a new instance using this code:
-
-\`\`\`js
-const window = require("Snowshot");
-const window = new window();
-\`\`\`
-
-**window** accepts these options:
-**\`options.removeTags\`**: This option allows you to remove provided tags before loading the code. Value for this option must be **Array**.
-Example:
-
-\`\`\`js
-new window({
-    removeTags: ["script"]
-});
-\`\`\`
-
-**\`options.removeAttributes\`**: This option allows you to remove certain attributes from the code. Value for this option must be **Array**.
-Example:
-
-\`\`\`js
-new window({
-    removeAttributes: ["onload"]
-});
-\`\`\`
-
-## window.load(code, markdown=false)
-This method allows you to load your HTML or Markdown code. Code type must be a **String**.
-First parameter takes your code and second parameter takes a **Boolean** value. If second parameter is set to \`true\`, it will render markdown too.
-Example:
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-
-window.load("<h1>Hello World</h1>");
-\`\`\`
-
-## window.getHTML()
-This method allows you to get the loaded HTML code. It might be different from the original code.
-Example:
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-
-window.load("<h1>Hello World</h1>");
-
-console.log(window.getHTML());
-\`\`\`
-
-## window.capture(options)
-This method allows you to take screenshot of your code.
-**options** are the options for **[Puppeteer.PageScreenshotOptions](https://github.com/puppeteer/puppeteer/blob/v5.0.0/docs/api.md#pagescreenshotoptions)**.
-Example:
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-const window = new Snowshot();
-
-window.load("<h1>Hello World</h1>");
-window.capture().then(data => fs.writeFileSync(data));
-\`\`\`
-
-## window.version
-Current version of **Snowshot**. You may not use this after instantiating **Snowshot** class.
-Example:
-
-\`\`\`js
-const Snowshot = require("Snowshot");
-console.log(Snowshot.version);
-\`\`\`
-
-# Created and maintained by
-**[Snowflake107](https://github.com/Snowflake107)**
-
-## Join my discord server
-**[Snowflake Development](https://snowflakedev.xyz/discord)**`;
+`;
 
 // create window
-const window = new Snowshot();
+const window = new Snowshot({
+    height: 1080,
+    width: 1920
+});
 
 // load html
 window.load(code, true);
