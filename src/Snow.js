@@ -9,6 +9,7 @@ let converter = new showdown.Converter({
     tasklists: true,
     simpleLineBreaks: true
 });
+const fs = require("fs");
 
 /**
  * Snowshot allows you to take screenshot of the given HTML/Markdown code.
@@ -21,21 +22,22 @@ class Snowshot {
      * @param {Object} options Snowshot options
      * @param {Array} [options.removeTags] Tags to be removed before rendering
      * @param {Array} [options.removeAttributes] Attributes to be removed before rendering
-     * @param {Array} [options.args] Puppeteer args
      * @param {Number} [options.height] Window Height
      * @param {Number} [options.width] Window width
+     * @param {Object} puppeteerOptions Puppeteer Options
      */
-    constructor(options = { removeTags: [], removeAttributes: [], args: [], height: 800, width: 1280 }) {
+    constructor(options = { removeTags: [], removeAttributes: [], args: [], height: 800, width: 1280 }, puppeteerOptions = {}) {
         if (!options.removeTags) options.removeTags = [];
         if (!options.removeAttributes) options.removeAttributes = [];
-        if (!options.args) options.args = [];
         if (!options.height) options.height = 800;
         if (!options.width) options.width = 1280;
+        if (!puppeteerOptions) puppeteerOptions = {};
+        if (typeof options !== "object") throw new Error(`Expected options to be an Object, received ${typeof options}!`);
         if (!Array.isArray(options.removeTags)) throw new Error(`Expected "options.removeTags" type to be Array, received ${typeof options.removeTags}!`);
         if (!Array.isArray(options.removeAttributes)) throw new Error(`Expected "options.removeAttributes" type to be Array, received ${typeof options.removeAttributes}!`);
-        if (!Array.isArray(options.args)) throw new Error(`Expected "options.args" type to be Array, received ${typeof options.args}!`);
         if (isNaN(options.height)) throw new Error(`Expected "options.height" to be a number, received ${typeof options.height}`);
         if (isNaN(options.width)) throw new Error(`Expected "options.height" to be a number, received ${typeof options.width}`);
+        if (typeof puppeteerOptions !== "object") throw new Error(`Expected putteteerOptions to be an Object, received ${typeof puppeteerOptions}!`);
 
         /**
          * Snowshot options
@@ -44,10 +46,30 @@ class Snowshot {
         this.options = options;
 
         /**
+         * Puppeteer options
+         * @type {Object}
+         */
+        this.puppeteerOptions = puppeteerOptions;
+        /**
          * Raw HTML code
          * @type {String}
          */
         this.rawHTML = "";
+    }
+
+    /**
+     * Loads HTML from file
+     * @param {String} filePath Path to file
+     * @param {Boolean} markdown Render markdown?
+     */
+    loadFromFile(filePath, markdown = false) {
+        if (!filePath || typeof filePath !== "string") throw new Error(`File path must be a string, received ${typeof filePath}`);
+        try {
+            const data = fs.readFileSync(filePath, { encoding: "utf-8" });
+            return this.load(data, markdown);
+        } catch (e) {
+            throw new Error("Invalid file or file path!");
+        }
     }
 
     /**
@@ -56,7 +78,7 @@ class Snowshot {
      * @param {Boolean} [isMarkdown=false] if the given input is a markdown, set the value to true
      * @returns {void}
      */
-    load(input, isMarkdown=false) {
+    load(input, isMarkdown = false) {
         if (!input || typeof input !== "string") throw new Error(`Input must be a string, received ${typeof input}`);
         let html = input;
         if (isMarkdown) {
@@ -81,7 +103,8 @@ class Snowshot {
      * @type {String}
      */
     getHTML() {
-        return this.rawHTML;
+        console.warn("This method has been deprecated and will be removed in next update! Use html() instead.");
+        return this.html();
     }
 
     /**
@@ -89,7 +112,7 @@ class Snowshot {
      * @type {String}
      */
     html() {
-        return this.getHTML();
+        return this.rawHTML;
     }
 
     /**
@@ -110,22 +133,9 @@ class Snowshot {
      * @param {Object} options options for puppeteer.screenshot()
      * @returns {Promise<Buffer>}
      */
-    async capture(options) {
-        if (!this.rawHTML) throw new Error("No html content found, Please load HTML before using capture method!");
-        if (options && typeof options === "object" && options["path"]) delete options["path"];
-        const browser = await Puppeteer.launch({
-            args: this.options.args
-        });
-        const page = await browser.newPage();
-        if (this.userAgent) await page.setUserAgent(this.userAgent);
-        await page.setViewport({
-            width: this.options.width,
-            height: this.options.height
-        });
-        await page.setContent(this.rawHTML);
-        const buffer = await page.screenshot(options);
-        await browser.close();
-        return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
+    capture(options) {
+        console.warn("This method has been deprecated and will be removed in next update! Use screenshot() instead.");
+        return this.screenshot(false, options);
     }
 
     /**
@@ -134,22 +144,46 @@ class Snowshot {
      * @param {Object} options Capture options
      * @returns {Promise<Buffer>}
      */
-    async captureWebsite(url, options) {
-        if (!url) throw new Error("No url was provided!");
-        if (options && typeof options === "object" && options["path"]) delete options["path"];
-        const browser = await Puppeteer.launch({
-            args: this.options.args
-        });
+    captureWebsite(url, options) {
+        console.warn("This method has been deprecated and will be removed in next update! Use screenshot() instead.");
+        return this.screenshot(url, options);
+    }
+
+    /**
+     * Captures website via url
+     * @param {String} url Website url. If set to false, it will try to screenshot loaded html.
+     * @param {Object} options Capture options
+     * @returns {Promise<Buffer>}
+     */
+    async screenshot(url = false, options) {
+        if (options && typeof options !== "object") throw new Error("Option type must be an object");
+        if (options && options["path"]) delete options["path"];
+        const browser = await Puppeteer.launch(this.puppeteerOptions);
         const page = await browser.newPage();
-        if (this.userAgent) await page.setUserAgent(this.userAgent);
         await page.setViewport({
             width: this.options.width,
             height: this.options.height
         });
-        await page.goto(url);
-        const buffer = await page.screenshot(options);
-        await browser.close();
-        return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
+        if (!url) {
+            if (!this.rawHTML) {
+                await browser.close();
+                throw new Error("No html content found, Please load HTML before using screenshot method!");
+            }
+            await page.setContent(this.rawHTML);
+            const buffer = await page.screenshot(options);
+            await browser.close();
+            return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
+        } else {
+            if (typeof url !== "string") {
+                await browser.close();
+                throw new Error(`URL type must be a string, received ${typeof url}`);
+            }
+            if (this.userAgent) await page.setUserAgent(this.userAgent);
+            await page.goto(url);
+            const buffer = await page.screenshot(options);
+            await browser.close();
+            return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
+        }
     }
 
     /**

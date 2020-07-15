@@ -1,6 +1,6 @@
 {
   "name": "snowshot",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Simple package to take screenshot of given html or markdown code.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,8 @@
     "html-to-canvas",
     "screenshot",
     "html-screenshot",
-    "markdown-screenshot"
+    "markdown-screenshot",
+    "puppeteer"
   ],
   "author": "Snowflake107",
   "license": "ISC",
@@ -26,7 +27,7 @@
   "homepage": "https://github.com/Snowflake107/snowshot#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "puppeteer": "^5.0.0",
+    "puppeteer": "^5.1.0",
     "showdown": "^1.9.1"
   }
 }
